@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const geminiRouter = require("./src/controllers/gemini-controllers");
 const courseRouter = require("./src/controllers/course-controllers");
+const timetableRouter = require("./src/controllers/timetable-controllers");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use((err, req, res, next) => {
 // router definition
 app.use("/api/gemini", geminiRouter);
 app.use("/api/course", courseRouter);
+app.use("/api/timetable", timetableRouter);
 
 app.listen(PORT, () => {
   console.log("server listening on port", PORT);
