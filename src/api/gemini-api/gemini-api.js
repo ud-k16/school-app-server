@@ -6,6 +6,7 @@ const callGemini = async ({ prompt = "Explain how AI works" }) => {
 
   const result = await model.generateContent(prompt);
   console.log(result.response.text());
+  return result.response.text;
 };
 
 module.exports = {
