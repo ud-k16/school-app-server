@@ -1,25 +1,36 @@
-import { createRxDatabase } from "rxdb";
-import { getRxStorageMemory } from "rxdb/plugins/storage-memory";
-import { timeTableSchema } from "./schema.js";
+const RxDB = require("rxdb");
+const { getRxStorageMemory } = require("rxdb/plugins/storage-memory");
+const { timeTableSchema } = require("./schema.js");
 
-//creation of a database
-const db = await createRxDatabase({
-  name: "school-app",
-  storage: getRxStorageMemory(),
-});
-//creating a collection for timetable
-const collection = await db.addCollections({
-  timeTableList: {
-    schema: timeTableSchema,
-  },
-});
+var db, collection;
+const initializeDB = async () => {
+  try {
+    //creation of a database
+    db = await RxDB.createRxDatabase({
+      name: "schoolapp",
+      storage: getRxStorageMemory(),
+    });
+    if (db) {
+      //creating a collection for timetable
+      collection = await db.addCollections({
+        timeTableList: {
+          schema: timeTableSchema,
+        },
+      });
+      if (collection) return true;
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 /**
  * adds item to timetable list if not already present
  * @param {*} {id,timetable}
  * @returns true if added else false
  */
-export const addToTimeTableList = async ({ id, timetable }) => {
+const addToTimeTableList = async ({ id, timetable }) => {
   try {
     const isExist = await isExistAlready(id);
     let addedOrNot;
@@ -28,7 +39,7 @@ export const addToTimeTableList = async ({ id, timetable }) => {
     if (!isExist) {
       addedOrNot = await collection.timeTableList
         .insert({
-          id,
+          id: id.toString(),
           timetable,
         })
         .catch((error) => console.log(error, "error"));
@@ -57,7 +68,7 @@ const isExistAlready = async (id) => {
 /**
  * prints table list to console
  */
-export const printTableList = () => {
+const printTableList = () => {
   collection.timeTableList
     .find()
     .exec()
@@ -73,11 +84,17 @@ export const printTableList = () => {
  *
  * @returns the timetable list in an array
  */
-export const getTimeTableList = async () => {
+const getTimeTableList = async () => {
   const document = await collection.timeTableList.find().exec();
   const tableList = document.map((item) => ({
     id: item._data.id,
     table: item._data.timetable,
   }));
   return tableList;
+};
+
+module.exports = {
+  initializeDB,
+  getTimeTableList,
+  addToTimeTableList,
 };

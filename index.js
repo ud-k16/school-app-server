@@ -5,7 +5,7 @@ const cors = require("cors");
 const geminiRouter = require("./src/controllers/gemini-controllers");
 const courseRouter = require("./src/controllers/course-controllers");
 const timetableRouter = require("./src/controllers/timetable-controllers");
-
+const { initializeDB } = require("./src/db/db");
 const app = express();
 
 app.use(express.json());
@@ -30,6 +30,7 @@ app.use("/api/gemini", geminiRouter);
 app.use("/api/course", courseRouter);
 app.use("/api/timetable", timetableRouter);
 
-app.listen(PORT, () => {
-  console.log("server listening on port", PORT);
+app.listen(PORT, async () => {
+  const dbConnection = await initializeDB();
+  if (dbConnection) console.log("server listening on port", PORT);
 });
