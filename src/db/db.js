@@ -16,10 +16,10 @@ const collection = await db.addCollections({
 
 /**
  * adds item to timetable list if not already present
- * @param {*} id
+ * @param {*} {id,timetable}
  * @returns true if added else false
  */
-export const addToTimeTableList = async (id) => {
+export const addToTimeTableList = async ({ id, timetable }) => {
   try {
     const isExist = await isExistAlready(id);
     let addedOrNot;
@@ -29,6 +29,7 @@ export const addToTimeTableList = async (id) => {
       addedOrNot = await collection.timeTableList
         .insert({
           id,
+          timetable,
         })
         .catch((error) => console.log(error, "error"));
     }
@@ -45,11 +46,13 @@ export const addToTimeTableList = async (id) => {
  * @returns true if item exist in timeTablelist or false if does not exist
  */
 const isExistAlready = async (id) => {
-  const document = await collection.timeTableList.find().exec();
-  //check if data exist
-  const exist = document.find((item) => item._data.id === id);
-  //if exist return true else false
-  return exist ? true : false;
+  try {
+    const document = await collection.timeTableList.find().exec();
+    //check if data exist
+    const exist = document.find((item) => item._data.id === id);
+    //if exist return true else false
+    return exist ? true : false;
+  } catch (error) {}
 };
 /**
  * prints table list to console
