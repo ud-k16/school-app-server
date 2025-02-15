@@ -9,6 +9,9 @@ const timeTableSchema = {
       minimum: 0,
       maxLength: 100,
     },
+    timetable: {
+      type: "array",
+    },
   },
   required: ["id"],
   indexes: ["id"],

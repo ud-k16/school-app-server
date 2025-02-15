@@ -84,7 +84,7 @@ const printTableList = () => {
  *
  * @returns the timetable list in an array
  */
-const getTimeTableList = async () => {
+const getTimeTableList = async (id = "8") => {
   const document = await collection.timeTableList.find().exec();
   const tableList = document.map((item) => ({
     id: item._data.id,
