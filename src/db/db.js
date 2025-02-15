@@ -39,7 +39,7 @@ const addToTimeTableList = async ({ id, timetable }) => {
     if (!isExist) {
       addedOrNot = await collection.timeTableList
         .insert({
-          id: id.toString(),
+          id: id,
           timetable,
         })
         .catch((error) => console.log(error, "error"));
