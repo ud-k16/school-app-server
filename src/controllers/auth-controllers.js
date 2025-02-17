@@ -12,6 +12,15 @@ authRouter.post("/login", async (req, res) => {
         user_type: "teacher",
       },
     });
+  } else {
+    return res.send({
+      status: true,
+      message: "logged in successful",
+      data: {
+        name: "uma k",
+        user_type: "student",
+      },
+    });
   }
 });
 
