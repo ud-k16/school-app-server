@@ -3,7 +3,7 @@ const express = require("express");
 const authRouter = express.Router();
 
 authRouter.post("/login", async (req, res) => {
-  if (((req.body.userId = "uma"), (req.body.password = "12345678"))) {
+  if (req.body.userId === "uma" && req.body.password === "12345678") {
     return res.send({
       status: true,
       message: "logged in successful",
