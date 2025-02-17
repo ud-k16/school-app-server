@@ -6,6 +6,7 @@ const geminiRouter = require("./src/controllers/gemini-controllers");
 const courseRouter = require("./src/controllers/course-controllers");
 const timetableRouter = require("./src/controllers/timetable-controllers");
 const { initializeDB } = require("./src/db/db");
+const authRouter = require("./src/controllers/auth-controllers");
 const app = express();
 
 app.use(express.json());
@@ -26,6 +27,7 @@ app.use((err, req, res, next) => {
 });
 
 // router definition
+app.use("/api/auth", authRouter);
 app.use("/api/gemini", geminiRouter);
 app.use("/api/course", courseRouter);
 app.use("/api/timetable", timetableRouter);
