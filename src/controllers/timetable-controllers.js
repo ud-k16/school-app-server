@@ -4,18 +4,23 @@ const { addToTimeTableList, getTimeTableList } = require("../db/db");
 const timetableRouter = express.Router();
 
 timetableRouter.post("/fetch", async (req, res) => {
-  const result = await getTimeTableList();
-  if (result) {
-    return res.send({
-      status: true,
-      message: "fetch successful",
-      data: result,
+  try {
+    // logging request
+    console.log("Fetch time table request for id : ", req.body.id);
+    // fetch timetable lidt for given id
+    const result = await getTimeTableList(req.body.id);
+    if (result) {
+      return res.send({
+        status: true,
+        message: "fetch successful",
+        data: result,
+      });
+    }
+    res.send({
+      status: false,
+      message: "fetch unsuccessful",
     });
-  }
-  res.send({
-    status: false,
-    message: "fetch unsuccessful",
-  });
+  } catch (error) {}
 });
 timetableRouter.post("/publish", async (req, res) => {
   // timetable is an array of array
