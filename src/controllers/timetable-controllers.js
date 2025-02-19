@@ -3,7 +3,7 @@ const { addToTimeTableList, getTimeTableList } = require("../db/db");
 
 const timetableRouter = express.Router();
 
-timetableRouter.get("/fetch", async (req, res) => {
+timetableRouter.post("/fetch", async (req, res) => {
   const result = await getTimeTableList();
   if (result) {
     return res.send({
