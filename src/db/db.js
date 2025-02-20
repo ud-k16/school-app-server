@@ -75,28 +75,28 @@ const printTableList = () => {
     .find()
     .exec()
     .then((document) => {
-      const resultSet = document.map((item) => ({
-        id: item._data.id,
-        table: item._data.timetable,
-      }));
-      console.log(`${JSON.stringify(resultSet, null, 4)}`);
+      console.log(`${JSON.stringify(document, null, 4)}`);
     });
 };
 /**
  *
- * @returns the timetable list in an array
+ * @returns the timetable for id
  */
 const getTimeTableList = async (id = "8") => {
-  const document = await collection.timeTableList.find().exec();
-  const tableList = document.map((item) => ({
-    id: item._data.id,
-    table: item._data.timetable,
-  }));
-  return tableList;
+  console.log("request to view time table for class  : ", id);
+  const document = await collection.timeTableList.findOne({
+    selector: {
+      id: id.toString(),
+    },
+  });
+  console.log(" Document : ", document);
+
+  return document._result;
 };
 
 module.exports = {
   initializeDB,
   getTimeTableList,
   addToTimeTableList,
+  printTableList,
 };

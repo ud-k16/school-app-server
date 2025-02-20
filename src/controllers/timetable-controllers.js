@@ -1,5 +1,9 @@
 const express = require("express");
-const { addToTimeTableList, getTimeTableList } = require("../db/db");
+const {
+  addToTimeTableList,
+  getTimeTableList,
+  printTableList,
+} = require("../db/db");
 
 const timetableRouter = express.Router();
 
@@ -7,6 +11,7 @@ timetableRouter.post("/fetch", async (req, res) => {
   try {
     // logging request
     console.log("Fetch time table request for id : ", req.body.id);
+    printTableList();
     // fetch timetable lidt for given id
     const result = await getTimeTableList(req.body.id);
     if (result) {
@@ -28,6 +33,7 @@ timetableRouter.post("/publish", async (req, res) => {
 
   const result = await addToTimeTableList({ id, timetable });
   if (result) {
+    printTableList();
     return res.send({
       status: true,
       message: "insert successful",
