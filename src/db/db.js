@@ -84,14 +84,10 @@ const printTableList = () => {
  */
 const getTimeTableList = async (id = "8") => {
   console.log("request to view time table for class  : ", id);
-  const document = await collection.timeTableList.findOne({
-    selector: {
-      id: id.toString(),
-    },
-  });
+  const document = await collection.timeTableList.findOne(id.toString()).exec();
   console.log(" Document : ", document);
 
-  return document._result;
+  return document;
 };
 
 module.exports = {
