@@ -7,7 +7,7 @@ const timeTableSchema = {
     id: {
       type: "string",
       minimum: 0,
-      maxLength: 100,
+      maxLength: 1000,
     },
     timetable: {
       type: "array",

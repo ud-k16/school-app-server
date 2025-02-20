@@ -32,14 +32,16 @@ const initializeDB = async () => {
  */
 const addToTimeTableList = async ({ id, timetable }) => {
   try {
-    const isExist = await isExistAlready(id);
+    console.log("enter new timetable : ", id, timetable);
+
+    const isExist = await isExistAlready(id.toString());
     let addedOrNot;
-    // console.log(`${id} `, 'already exist : ', isExist);
+    console.log(`${id} `, "already exist : ", isExist);
     //if item not exist add to timetablelist and return true indicating item added to list
     if (!isExist) {
       addedOrNot = await collection.timeTableList
         .insert({
-          id: id,
+          id: id.toString(),
           timetable,
         })
         .catch((error) => console.log(error, "error"));
