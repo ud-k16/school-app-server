@@ -9,7 +9,7 @@ const timeTableSchema = {
       minimum: 0,
       maxLength: 1000,
     },
-    timetable: {
+    time_table: {
       type: "array",
     },
   },

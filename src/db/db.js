@@ -30,19 +30,19 @@ const initializeDB = async () => {
  * @param {*} {id,timetable}
  * @returns true if added else false
  */
-const addToTimeTableList = async ({ id, timetable }) => {
+const addToTimeTableList = async ({ id, timeTable }) => {
   try {
-    console.log("enter new timetable : ", id, timetable);
+    console.log("enter new timetable : ", id, timeTable);
 
-    const isExist = await isExistAlready(id.toString());
+    const isExist = await isExistAlready(id);
     let addedOrNot;
     console.log(`${id} `, "already exist : ", isExist);
     //if item not exist add to timetablelist and return true indicating item added to list
     if (!isExist) {
       addedOrNot = await collection.timeTableList
         .insert({
-          id: id.toString(),
-          timetable,
+          id,
+          time_table: timeTable,
         })
         .catch((error) => console.log(error, "error"));
     }
@@ -90,6 +90,9 @@ const getTimeTableList = async (id = "8") => {
   return document;
 };
 
+const updateTimeTable = async ({ id, timeTable }) => {
+  console.log("update for : ", id, " payload", timeTable);
+};
 module.exports = {
   initializeDB,
   getTimeTableList,

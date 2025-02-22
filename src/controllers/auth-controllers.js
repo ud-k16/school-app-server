@@ -19,7 +19,7 @@ authRouter.post("/login", async (req, res) => {
       data: {
         name: "uma k",
         user_type: "student",
-        classId: "CLASS6A",
+        classId: "CLASS8C",
       },
     });
   }

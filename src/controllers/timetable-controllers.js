@@ -11,7 +11,7 @@ timetableRouter.post("/fetch", async (req, res) => {
   try {
     // logging request
     console.log("Fetch time table request for id : ", req.body.id);
-    printTableList();
+
     // fetch timetable lidt for given id
     const result = await getTimeTableList(req.body.id);
     if (result) {
@@ -29,11 +29,10 @@ timetableRouter.post("/fetch", async (req, res) => {
 });
 timetableRouter.post("/publish", async (req, res) => {
   // timetable is an array of array
-  const { id, timetable } = req.body;
+  const { id, timeTable } = req.body;
 
-  const result = await addToTimeTableList({ id, timetable });
+  const result = await addToTimeTableList({ id, timeTable });
   if (result) {
-    printTableList();
     return res.send({
       status: true,
       message: "insert successful",
