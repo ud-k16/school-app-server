@@ -1,10 +1,14 @@
 const RxDB = require("rxdb");
 const { getRxStorageMemory } = require("rxdb/plugins/storage-memory");
+
+const { RxDBUpdatePlugin } = require("rxdb/plugins/update");
 const { timeTableSchema } = require("./schema.js");
 
 var db, collection;
+
 const initializeDB = async () => {
   try {
+    RxDB.addRxPlugin(RxDBUpdatePlugin);
     //creation of a database
     db = await RxDB.createRxDatabase({
       name: "schoolapp",
@@ -54,6 +58,34 @@ const addToTimeTableList = async ({ id, timeTable }) => {
 };
 
 /**
+ * adds item to timetable list if not already present
+ * @param {*} {id,timetable}
+ * @returns true if added else false
+ */
+const updateToTimeTableList = async ({ id, timeTable }) => {
+  try {
+    console.log("update timetable : ", id, timeTable);
+    const doc = await collection.timeTableList
+      .findOne({ selector: { id } })
+      .exec();
+    let updatedOrNot;
+    //if item not exist add to timetablelist and return true indicating item added to list
+    if (doc) {
+      updatedOrNot = await doc
+        .update({
+          $set: {
+            time_table: timeTable,
+          },
+        })
+        .catch((error) => console.log(error, "error"));
+    }
+    // console.log(updatedOrNot);
+    return updatedOrNot ? true : false;
+  } catch (error) {
+    console.log(error);
+  }
+};
+/**
  * check if item exist in timeTableList
  * @param {*} id
  * @returns true if item exist in timeTablelist or false if does not exist
@@ -90,12 +122,10 @@ const getTimeTableList = async (id = "8") => {
   return document;
 };
 
-const updateTimeTable = async ({ id, timeTable }) => {
-  console.log("update for : ", id, " payload", timeTable);
-};
 module.exports = {
   initializeDB,
   getTimeTableList,
   addToTimeTableList,
+  updateToTimeTableList,
   printTableList,
 };

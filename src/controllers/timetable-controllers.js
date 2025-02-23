@@ -3,6 +3,7 @@ const {
   addToTimeTableList,
   getTimeTableList,
   printTableList,
+  updateToTimeTableList,
 } = require("../db/db");
 
 const timetableRouter = express.Router();
@@ -41,6 +42,23 @@ timetableRouter.post("/publish", async (req, res) => {
   res.send({
     status: false,
     message: "insert unsuccessful",
+  });
+  //   console.log(result);
+});
+timetableRouter.post("/update", async (req, res) => {
+  // timetable is an array of array
+  const { id, timeTable } = req.body;
+
+  const result = await updateToTimeTableList({ id, timeTable });
+  if (result) {
+    return res.send({
+      status: true,
+      message: "update successful",
+    });
+  }
+  res.send({
+    status: false,
+    message: "update unsuccessful",
   });
   //   console.log(result);
 });
