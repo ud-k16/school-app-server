@@ -8,8 +8,9 @@ authRouter.post("/login", async (req, res) => {
       status: true,
       message: "logged in successful",
       data: {
-        name: "uma k",
+        name: "uma",
         user_type: "teacher",
+        classId: "CLASS6A",
       },
     });
   } else {
