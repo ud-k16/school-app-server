@@ -2,7 +2,7 @@ const RxDB = require("rxdb");
 const { getRxStorageMemory } = require("rxdb/plugins/storage-memory");
 
 const { RxDBUpdatePlugin } = require("rxdb/plugins/update");
-const { timeTableSchema } = require("./schema.js");
+const { timeTableSchema, courseSchema } = require("./schema.js");
 const { socketInstance } = require("../socket/index.js");
 
 var db, collection;
@@ -20,6 +20,9 @@ const initializeDB = async () => {
       collection = await db.addCollections({
         timeTableList: {
           schema: timeTableSchema,
+        },
+        courseList: {
+          schema: courseSchema,
         },
       });
       if (collection) return true;
@@ -130,10 +133,105 @@ const getTimeTableList = async (id = "8") => {
   return document;
 };
 
+// course section
+
+/**
+ * adds item to course list if not already present
+ * @param {*} {id,timetable}
+ * @returns true if added else false
+ */
+const addcourseList = async ({ id, course }) => {
+  try {
+    console.log("enter new course : ", id, course);
+
+    const isExist = await isCourseExistAlready(id);
+    let addedOrNot;
+    console.log(`${id} `, "already exist : ", isExist);
+    //if item not exist add to courseList and return true indicating item added to list
+    if (!isExist) {
+      addedOrNot = await collection.courseList
+        .insert({
+          id,
+          course,
+        })
+        .catch((error) => console.log(error, "error"));
+    }
+    //if item already exist return false indicating given item not added now
+    return addedOrNot ? true : false;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+/**
+ * adds item to course list if not already present
+ * @param {*} {id,course}
+ * @returns true if added else false
+ */
+const updateToCourseList = async ({ id, course }) => {
+  try {
+    console.log("update course : ", id, course);
+    const doc = await collection.courseList
+      .findOne({ selector: { id } })
+      .exec();
+    let updatedOrNot;
+    //if item not exist add to courseList and return true indicating item added to list
+    if (doc) {
+      updatedOrNot = await doc
+        .update({
+          $set: {
+            course,
+          },
+        })
+        .catch((error) => console.log(error, "error"));
+    }
+    if (updatedOrNot) {
+      socketInstance.clients.forEach((client) => {
+        client.emit("t_update", () => {
+          client.send("update for time table");
+        });
+      });
+    }
+
+    return updatedOrNot ? true : false;
+  } catch (error) {
+    console.log(error);
+  }
+};
+/**
+ * check if item exist in timeTableList
+ * @param {*} id
+ * @returns true if item exist in timeTablelist or false if does not exist
+ */
+const isCourseExistAlready = async (id) => {
+  try {
+    const document = await collection.courseList.find().exec();
+    //check if data exist
+    const exist = document.find((item) => item._data.id === id);
+    //if exist return true else false
+    return exist ? true : false;
+  } catch (error) {}
+};
+
+/**
+ *
+ * @returns the timetable for id
+ */
+export const getCourseList = async (id = "CLASS6A") => {
+  console.log("request to view time table for class  : ", id);
+  const document = await collection.courseList.findOne(id.toString()).exec();
+  console.log(" Document : ", document);
+
+  return document;
+};
+
 module.exports = {
   initializeDB,
   getTimeTableList,
   addToTimeTableList,
   updateToTimeTableList,
   printTableList,
+  addcourseList,
+  updateToCourseList,
+  getCourseList,
 };
