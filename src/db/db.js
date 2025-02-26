@@ -41,20 +41,16 @@ const initializeDB = async () => {
 const addToTimeTableList = async ({ id, timeTable }) => {
   try {
     console.log("enter new timetable : ", id, timeTable);
-
-    const isExist = await isExistAlready(id);
     let addedOrNot;
-    console.log(`${id} `, "already exist : ", isExist);
-    //if item not exist add to timetablelist and return true indicating item added to list
-    if (!isExist) {
-      addedOrNot = await collection.timeTableList
-        .insert({
-          id,
-          time_table: timeTable,
-        })
-        .catch((error) => console.log(error, "error"));
-    }
-    //if item already exist return false indicating given item not added now
+    // add to timetablelist and return true indicating item added to list
+    addedOrNot = await collection.timeTableList
+      .insert({
+        id,
+        time_table: timeTable,
+      })
+      .catch((error) => console.log(error, "error"));
+
+    //return false indicating given item not added now
     return addedOrNot ? true : false;
   } catch (error) {
     console.log(error);
@@ -101,7 +97,7 @@ const updateToTimeTableList = async ({ id, timeTable }) => {
  * @param {*} id
  * @returns true if item exist in timeTablelist or false if does not exist
  */
-const isExistAlready = async (id) => {
+const isTimeTableExist = async (id) => {
   try {
     const document = await collection.timeTableList.find().exec();
     //check if data exist
@@ -144,9 +140,7 @@ const addcourseList = async ({ id, course }) => {
   try {
     console.log("enter new course : ", id, course);
     let addedOrNot;
-    console.log(`${id} `, "already exist : ", isExist);
-    //if item not exist add to courseList and return true indicating item added to list
-
+    // add to courseList and return true indicating item added to list
     addedOrNot = await collection.courseList
       .insert({
         id,
@@ -154,7 +148,7 @@ const addcourseList = async ({ id, course }) => {
       })
       .catch((error) => console.log(error, "error"));
 
-    //if item already exist return false indicating given item not added now
+    // return false indicating given item not added now
     return addedOrNot ? true : false;
   } catch (error) {
     console.log(error);
@@ -185,8 +179,8 @@ const updateCourseList = async ({ id, course }) => {
     }
     if (updatedOrNot) {
       socketInstance.clients.forEach((client) => {
-        client.emit("t_update", () => {
-          client.send("update for time table");
+        client.emit("c_update", () => {
+          client.send("update for course");
         });
       });
     }
@@ -228,6 +222,7 @@ module.exports = {
   getTimeTableList,
   addToTimeTableList,
   updateToTimeTableList,
+  isTimeTableExist,
   printTableList,
   addcourseList,
   updateCourseList,

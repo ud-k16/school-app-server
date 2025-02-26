@@ -2,7 +2,7 @@ const express = require("express");
 const {
   addToTimeTableList,
   getTimeTableList,
-
+  isTimeTableExist,
   updateToTimeTableList,
 } = require("../db/db");
 
@@ -26,13 +26,19 @@ timetableRouter.post("/fetch", async (req, res) => {
       status: false,
       message: "fetch unsuccessful",
     });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 });
 timetableRouter.post("/publish", async (req, res) => {
   // timetable is an array of array
   const { id, timeTable } = req.body;
-
-  const result = await addToTimeTableList({ id, timeTable });
+  let result;
+  const isExist = await isTimeTableExist(id);
+  if (isExist) result = await addToTimeTableList({ id, timeTable });
+  else {
+    result = await updateToTimeTableList({ id, timeTable });
+  }
   if (result) {
     return res.send({
       status: true,
