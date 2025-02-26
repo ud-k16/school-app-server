@@ -35,7 +35,10 @@ timetableRouter.post("/publish", async (req, res) => {
   const { id, timeTable } = req.body;
   let result;
   const isExist = await isTimeTableExist(id);
-  if (isExist) result = await addToTimeTableList({ id, timeTable });
+
+  console.log(isExist, "timeTable already present in the database");
+
+  if (!isExist) result = await addToTimeTableList({ id, timeTable });
   else {
     result = await updateToTimeTableList({ id, timeTable });
   }
@@ -48,23 +51,6 @@ timetableRouter.post("/publish", async (req, res) => {
   res.send({
     status: false,
     message: "insert unsuccessful",
-  });
-  //   console.log(result);
-});
-timetableRouter.post("/update", async (req, res) => {
-  // timetable is an array of array
-  const { id, timeTable } = req.body;
-
-  const result = await updateToTimeTableList({ id, timeTable });
-  if (result) {
-    return res.send({
-      status: true,
-      message: "update successful",
-    });
-  }
-  res.send({
-    status: false,
-    message: "update unsuccessful",
   });
   //   console.log(result);
 });
