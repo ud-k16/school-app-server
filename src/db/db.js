@@ -209,7 +209,7 @@ const isCourseExistAlready = async (id) => {
  *
  * @returns the timetable for id
  */
-export const getCourseList = async (id = "CLASS6A") => {
+const getCourseList = async (id = "CLASS6A") => {
   console.log("request to view time table for class  : ", id);
   const document = await collection.courseList.findOne(id.toString()).exec();
   console.log(" Document : ", document);
