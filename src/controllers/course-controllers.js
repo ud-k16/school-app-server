@@ -1,5 +1,10 @@
 const express = require("express");
-const { addcourseList, updateCourseList, getCourseList } = require("../db/db");
+const {
+  addcourseList,
+  updateCourseList,
+  getCourseList,
+  isCourseExistAlready,
+} = require("../db/db");
 const courseRouter = express.Router();
 
 courseRouter.post("/fetch", async (req, res) => {
@@ -29,7 +34,7 @@ courseRouter.post("/publish", async (req, res) => {
   const { id, course } = req.body;
   let result;
   const isOld = await isCourseExistAlready(id);
-  if (isOld) result = await addcourseList({ id, course });
+  if (!isOld) result = await addcourseList({ id, course });
   else {
     result = await updateCourseList({ id, course });
   }
