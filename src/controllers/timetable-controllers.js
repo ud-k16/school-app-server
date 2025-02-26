@@ -2,7 +2,7 @@ const express = require("express");
 const {
   addToTimeTableList,
   getTimeTableList,
-  printTableList,
+
   updateToTimeTableList,
 } = require("../db/db");
 

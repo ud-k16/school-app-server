@@ -143,19 +143,17 @@ const getTimeTableList = async (id = "8") => {
 const addcourseList = async ({ id, course }) => {
   try {
     console.log("enter new course : ", id, course);
-
-    const isExist = await isCourseExistAlready(id);
     let addedOrNot;
     console.log(`${id} `, "already exist : ", isExist);
     //if item not exist add to courseList and return true indicating item added to list
-    if (!isExist) {
-      addedOrNot = await collection.courseList
-        .insert({
-          id,
-          course,
-        })
-        .catch((error) => console.log(error, "error"));
-    }
+
+    addedOrNot = await collection.courseList
+      .insert({
+        id,
+        course,
+      })
+      .catch((error) => console.log(error, "error"));
+
     //if item already exist return false indicating given item not added now
     return addedOrNot ? true : false;
   } catch (error) {
@@ -168,7 +166,7 @@ const addcourseList = async ({ id, course }) => {
  * @param {*} {id,course}
  * @returns true if added else false
  */
-const updateToCourseList = async ({ id, course }) => {
+const updateCourseList = async ({ id, course }) => {
   try {
     console.log("update course : ", id, course);
     const doc = await collection.courseList
@@ -232,6 +230,7 @@ module.exports = {
   updateToTimeTableList,
   printTableList,
   addcourseList,
-  updateToCourseList,
+  updateCourseList,
   getCourseList,
+  isCourseExistAlready,
 };
