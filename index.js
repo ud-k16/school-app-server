@@ -7,7 +7,6 @@ const courseRouter = require("./src/controllers/course-controllers");
 const timetableRouter = require("./src/controllers/timetable-controllers");
 const { initializeDB } = require("./src/db/db");
 const authRouter = require("./src/controllers/auth-controllers");
-const { initializeSocket } = require("./src/socket");
 const app = express();
 
 app.use(express.json());
@@ -35,7 +34,6 @@ app.use("/api/timetable", timetableRouter);
 
 app.listen(PORT, async () => {
   const dbConnection = await initializeDB();
-  const socketConnection = await initializeSocket();
-  if (dbConnection && socketConnection)
-    console.log("server listening on port", PORT);
+
+  if (dbConnection) console.log("server listening on port", PORT);
 });

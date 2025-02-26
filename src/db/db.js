@@ -3,6 +3,7 @@ const { getRxStorageMemory } = require("rxdb/plugins/storage-memory");
 
 const { RxDBUpdatePlugin } = require("rxdb/plugins/update");
 const { timeTableSchema } = require("./schema.js");
+const { socketInstance } = require("../socket/index.js");
 
 var db, collection;
 
@@ -79,7 +80,14 @@ const updateToTimeTableList = async ({ id, timeTable }) => {
         })
         .catch((error) => console.log(error, "error"));
     }
-    // console.log(updatedOrNot);
+    if (updatedOrNot) {
+      socketInstance.clients.forEach((client) => {
+        client.emit("t_update", () => {
+          client.send("update for time table");
+        });
+      });
+    }
+
     return updatedOrNot ? true : false;
   } catch (error) {
     console.log(error);
