@@ -13,7 +13,7 @@ authRouter.post("/login", async (req, res) => {
         classId: "CLASS6A",
       },
     });
-  } else {
+  } else if (req.body.userId === "uma k" && req.body.password === "12345678") {
     return res.send({
       status: true,
       message: "logged in successful",
@@ -22,6 +22,11 @@ authRouter.post("/login", async (req, res) => {
         user_type: "student",
         classId: "CLASS6A",
       },
+    });
+  } else {
+    return res.send({
+      status: false,
+      message: "unauthorized",
     });
   }
 });
