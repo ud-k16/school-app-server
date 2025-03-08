@@ -17,7 +17,7 @@ app.use(
   })
 );
 
-const PORT = process.env.DEV_PORT || 7000;
+const PORT = process.env.PORT || 7000;
 
 // error handling middleware
 app.use((err, req, res, next) => {
